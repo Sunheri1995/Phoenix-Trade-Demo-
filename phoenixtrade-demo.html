@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080d19">
+<title>PhoenixTrade — Demo Trading Dashboard</title>
+<style>
+:root{--bg:#080d19;--panel:#111a2b;--panel2:#0c1423;--line:#243149;--text:#edf3ff;--muted:#93a2bc;--green:#32d296;--red:#ff647c;--gold:#ffc766;--blue:#7b8cff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#14213b 0,#080d19 55%);color:var(--text);font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+.wrap{max-width:1100px;margin:auto;padding:18px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.brand{display:flex;gap:10px;align-items:center}.logo{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#ffc766,#ff8a55);display:grid;place-items:center;color:#101727;font-size:24px;font-weight:900;box-shadow:0 8px 24px #ff9c4440}.brand h1{font-size:20px;margin:0;letter-spacing:.2px}.sub{font-size:12px;color:var(--muted)}.demo{border:1px solid #2c5b50;background:#10332e;color:#72f0c1;padding:7px 10px;border-radius:99px;font-size:12px;font-weight:700;white-space:nowrap}
+.grid{display:grid;grid-template-columns:1.4fr 1fr;gap:14px}.panel{background:linear-gradient(160deg,#121c2e,#0d1524);border:1px solid var(--line);border-radius:17px;padding:16px;box-shadow:0 12px 35px #0002;min-width:0}.panel h2{font-size:15px;margin:0 0 12px}.muted{color:var(--muted)}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:14px}.stat{padding:13px;border:1px solid var(--line);background:#0b1321;border-radius:13px}.stat .label{color:var(--muted);font-size:11px}.stat .value{font-size:20px;font-weight:750;margin-top:4px}.green{color:var(--green)}.red{color:var(--red)}.gold{color:var(--gold)}.chart-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}.pill{font-size:11px;border:1px solid var(--line);border-radius:8px;padding:5px 8px;color:var(--muted)}canvas{display:block;width:100%;height:210px;background:linear-gradient(#0b1423,#0b1220);border:1px solid #1c2a40;border-radius:12px}.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.chip{border:1px solid var(--line);padding:6px 9px;border-radius:8px;background:#0a1321;color:var(--muted);font-size:12px}.chip.active{border-color:#6c7df0;color:#cbd1ff;background:#1a2140}.field{margin:12px 0}.field label{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}.field select,.field input{width:100%;background:#091220;border:1px solid #2a3851;color:var(--text);padding:11px;border-radius:10px;font:inherit;outline:none}.twocol{display:grid;grid-template-columns:1fr 1fr;gap:10px}.buttons{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}.btn{border:0;border-radius:10px;padding:12px;font:700 14px inherit;cursor:pointer;color:#07131a}.btn:disabled{opacity:.45;cursor:not-allowed}.up{background:var(--green)}.down{background:var(--red);color:#fff}.neutral{background:#25334a;color:var(--text);border:1px solid #3b4a64}.notice{margin-top:12px;padding:10px 12px;border:1px solid #5b4728;background:#2b2114;color:#ffdba0;border-radius:10px;font-size:12px}.list{display:grid;gap:9px}.signal,.position{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:11px;background:#0a1321;border:1px solid var(--line);border-radius:11px}.signal strong,.position strong{display:block;font-size:13px}.signal small,.position small{color:var(--muted);font-size:11px}.tag{font-size:11px;border-radius:7px;padding:5px 7px;background:#12352e;color:#7df0c4;white-space:nowrap}.tag.wait{background:#322817;color:#ffd58b}.section{margin-top:14px}.toggle-row{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid #202d42}.toggle-row:last-child{border:0}.toggle-row small{display:block;color:var(--muted);font-size:11px}.switch{appearance:none;width:38px;height:22px;border-radius:20px;background:#354258;position:relative;flex-shrink:0;cursor:pointer}.switch:checked{background:#247c60}.switch:before{content:"";position:absolute;width:16px;height:16px;left:3px;top:3px;border-radius:50%;background:white;transition:.15s}.switch:checked:before{left:19px}.empty{color:var(--muted);font-size:12px;padding:12px 0}.foot{text-align:center;color:#77869f;font-size:11px;padding:18px 0 6px}.toast{margin-top:10px;font-size:12px;color:#c4d0e6;min-height:18px}.scan-summary{padding:12px;border:1px solid #2a3851;border-radius:12px;background:#0a1321;margin-bottom:10px}.scan-summary .headline{font-size:18px;font-weight:800;margin:4px 0}.meter{height:7px;background:#25334a;border-radius:99px;overflow:hidden;margin:8px 0}.meter span{display:block;height:100%;width:50%;background:linear-gradient(90deg,#ffc766,#32d296);border-radius:99px}.scan-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.scan-actions button{flex:1;min-width:130px}.scan-note{font-size:11px;color:var(--muted);margin-top:8px}.metric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}.metric{background:#0b1321;border:1px solid var(--line);border-radius:10px;padding:9px}.metric small{display:block;color:var(--muted);font-size:10px}.metric strong{font-size:14px}
+@media(max-width:760px){.wrap{padding:12px}.grid{grid-template-columns:1fr}.stats{gap:7px}.stat{padding:10px}.stat .value{font-size:17px}.panel{padding:13px}.top{align-items:flex-start}.brand h1{font-size:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><div class="logo">ϟ</div><div><h1>PhoenixTrade</h1><div class="sub">AI-inspired demo trading workspace</div></div></div>
+    <div class="demo">● DEMO MODE</div>
+  </header>
+  <div class="stats">
+    <div class="stat"><div class="label">Virtual balance</div><div class="value" id="balance">$1,000.00</div></div>
+    <div class="stat"><div class="label">Demo P/L</div><div class="value" id="pnl">$0.00</div></div>
+    <div class="stat"><div class="label">Risk guard</div><div class="value green" style="font-size:16px">ON · LOW</div></div>
+  </div>
+  <div class="grid">
+    <main>
+      <section class="panel">
+        <div class="chart-head"><h2>Market monitor</h2><span class="pill">Illustrative data · not live</span></div>
+        <div class="chart-head"><div><strong id="marketTitle">Volatility 100 Index</strong><div class="sub">Simulated price movement</div></div><span class="pill" id="price">10,245.80</span></div>
+        <canvas id="chart" aria-label="Illustrative price chart"></canvas>
+        <div class="chips" id="markets">
+          <button class="chip active" data-market="Volatility 100 Index" data-symbol="">Volatility 100</button>
+          <button class="chip" data-market="Volatility 50 Index" data-symbol="">Volatility 50</button>
+          <button class="chip" data-market="Volatility 25 Index" data-symbol="">Volatility 25</button>
+          <button class="chip" data-market="Step Index" data-symbol="">Step Index</button>
+        </div>
+        <div class="scan-actions" style="margin-top:12px">
+          <button class="btn up" id="connectLiveBtn">Connect live prices</button>
+          <button class="btn neutral" id="disconnectLiveBtn">Disconnect</button>
+        </div>
+        <div class="toast" id="liveStatus" aria-live="polite">Market data: disconnected · sample prices shown</div>
+        <div class="notice">Live mode reads public market prices only. PhoenixTrade remains demo-only: this page does not submit orders to Deriv. The default app ID is for testing; use your own registered app ID for your own deployment.</div>
+      </section>
+      <section class="panel section" id="aiScanner">
+        <div class="chart-head"><h2>AI-style market scanner</h2><span class="pill">Demo analysis</span></div>
+        <div class="scan-summary">
+          <div class="sub">Latest scan · simulated price history</div>
+          <div class="headline" id="scanHeadline">Ready to analyze</div>
+          <div class="sub" id="scanExplanation">Run a scan to calculate recent momentum, trend consistency, and price variability.</div>
+          <div class="meter"><span id="scanMeter" style="width:0%"></span></div>
+          <div class="sub" id="scanScore">No score yet</div>
+        </div>
+        <div class="metric-grid">
+          <div class="metric"><small>Short-term momentum</small><strong id="momentumValue">—</strong></div>
+          <div class="metric"><small>Trend consistency</small><strong id="trendValue">—</strong></div>
+          <div class="metric"><small>Price variability</small><strong id="volValue">—</strong></div>
+        </div>
+        <div class="scan-actions"><button class="btn neutral" id="scanBtn">Analyze sample market</button><button class="btn neutral" id="refreshDataBtn">Generate new sample</button></div>
+        <div class="scan-note">This is a transparent rule-based demonstration, not a real AI model or a prediction guarantee. It uses only the illustrative prices shown on this page.</div>
+      </section>
+      <section class="panel section">
+        <h2>Scanner signals</h2>
+        <div class="sub" style="margin-bottom:10px">Example signals for testing the interface — not AI predictions.</div>
+        <div class="list">
+          <div class="signal"><div><strong>Rise / Fall</strong><small>Trend sample · 1 minute</small></div><span class="tag">RISE · 61%</span></div>
+          <div class="signal"><div><strong>Even / Odd</strong><small>Last digit sample</small></div><span class="tag wait">WAIT · 50%</span></div>
+          <div class="signal"><div><strong>Touch / No Touch</strong><small>Volatility sample</small></div><span class="tag">NO TOUCH · 58%</span></div>
+          <div class="signal"><div><strong>Matches / Differs</strong><small>Digit sample</small></div><span class="tag wait">WAIT · 50%</span></div>
+          <div class="signal"><div><strong>Over / Under</strong><small>Digit sample</small></div><span class="tag">UNDER · 55%</span></div>
+        </div>
+      </section>
+    </main>
+    <aside>
+      <section class="panel">
+        <h2>Demo trade ticket</h2>
+        <div class="field"><label for="marketType">Market type</label><select id="marketType"><option>Rise / Fall</option><option>Even / Odd</option><option>Over / Under</option><option>Matches / Differs</option><option>Touch / No Touch</option><option>Rise / Fall (short duration)</option></select></div>
+        <div class="twocol">
+          <div class="field"><label for="stake">Stake (USD)</label><input id="stake" type="number" value="1" min="0.35" max="2" step="0.25"></div>
+          <div class="field"><label for="duration">Duration</label><select id="duration"><option value="1">1 minute</option><option value="2">2 minutes</option><option value="5">5 minutes</option></select></div>
+        </div>
+        <div class="twocol">
+          <div class="stat"><div class="label">Max stake</div><div class="value" style="font-size:16px">$2.00</div></div>
+          <div class="stat"><div class="label">Open positions</div><div class="value" id="openCount" style="font-size:16px">0 / 1</div></div>
+        </div>
+        <div class="buttons"><button class="btn up" id="riseBtn">↗ Rise / Even</button><button class="btn down" id="fallBtn">↘ Fall / Odd</button></div>
+        <div class="toast" id="message" aria-live="polite">Ready for a simulated trade.</div>
+        <div class="section">
+          <div class="toggle-row"><div><strong>Demo bot</strong><small>Requires your manual demo confirmation</small></div><input class="switch" type="checkbox" id="bot"></div>
+          <div class="toggle-row"><div><strong>Low-risk guard</strong><small>Enforce stake and position limits</small></div><input class="switch" type="checkbox" id="risk" checked></div>
+          <div class="toggle-row"><div><strong>Scanner alerts</strong><small>Interface-only setting</small></div><input class="switch" type="checkbox" id="alerts" checked></div>
+        </div>
+      </section>
+      <section class="panel section" id="botPanel">
+        <div class="chart-head"><h2>Demo bot lab</h2><span class="pill">Manual start · virtual money</span></div>
+        <div class="sub">Configure a simple rule-based bot. It can only create simulated demo positions on this page.</div>
+        <div class="field"><label for="botStrategy">Entry rule</label><select id="botStrategy"><option value="momentum">Momentum: follow recent movement</option><option value="contrarian">Contrarian: choose against recent movement</option><option value="mixed">Mixed market: wait unless movement is clear</option></select></div>
+        <div class="twocol">
+          <div class="field"><label for="botStake">Stake per demo trade (USD)</label><input id="botStake" type="number" min="0.35" max="2" step="0.25" value="0.50"></div>
+          <div class="field"><label for="botMaxTrades">Trade limit per run</label><select id="botMaxTrades"><option value="1">1 trade</option><option value="2">2 trades</option><option value="3">3 trades</option></select></div>
+        </div>
+        <div class="twocol">
+          <div class="field"><label for="botStopLoss">Session loss stop (USD)</label><select id="botStopLoss"><option value="1">$1.00</option><option value="2" selected>$2.00</option><option value="3">$3.00</option></select></div>
+          <div class="field"><label for="botTakeProfit">Session profit stop (USD)</label><select id="botTakeProfit"><option value="1">$1.00</option><option value="2" selected>$2.00</option><option value="3">$3.00</option></select></div>
+        </div>
+        <div class="metric-grid">
+          <div class="metric"><small>Trades this run</small><strong id="botTradeCount">0</strong></div>
+          <div class="metric"><small>Run P/L</small><strong id="botRunPnl">$0.00</strong></div>
+          <div class="metric"><small>Bot state</small><strong id="botState">STOPPED</strong></div>
+        </div>
+        <div class="scan-actions"><button class="btn up" id="startBot">Start demo run</button><button class="btn neutral" id="stopBot">Stop bot</button><button class="btn neutral" id="resetBot">Reset run</button></div>
+        <div class="toast" id="botMessage" aria-live="polite">Bot is stopped. Review the rules before starting.</div>
+        <div class="notice">Safety limits apply to this browser demo only. This is not an always-running background bot; keep the page open while testing. Results are simulated and not evidence of strategy profitability.</div>
+      </section>
+      <section class="panel section"><h2>Open demo position</h2><div id="positions" class="empty">No open demo positions.</div><div class="sub">Positions settle automatically after a short UI simulation. Results are random and have no predictive value.</div></section>
+    </aside>
+  </div>
+  <div class="foot">PhoenixTrade prototype · simulated data only · not financial advice</div>
+</div>
+<script>
+const canvas=document.getElementById('chart'),ctx=canvas.getContext('2d');let seed=10245.8,points=[];for(let i=0;i<46;i++){seed+=(Math.random()-.48)*18;points.push(seed)}
+let balance=1000,pnl=0,open=null,market='Volatility 100 Index',marketBase=10245.8;
+function money(n){return '$'+n.toFixed(2)}
+function draw(){const dpr=window.devicePixelRatio||1,w=canvas.clientWidth,h=canvas.clientHeight;canvas.width=w*dpr;canvas.height=h*dpr;ctx.scale(dpr,dpr);ctx.clearRect(0,0,w,h);ctx.strokeStyle='#1d2a40';ctx.lineWidth=1;for(let i=1;i<5;i++){let y=h*i/5;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke()}let min=Math.min(...points)-8,max=Math.max(...points)+8;ctx.beginPath();points.forEach((p,i)=>{let x=i*w/(points.length-1),y=h-(p-min)/(max-min)*h;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.strokeStyle='#7b8cff';ctx.lineWidth=2.2;ctx.stroke();ctx.lineTo(w,h);ctx.lineTo(0,h);ctx.closePath();ctx.fillStyle='rgba(123,140,255,.10)';ctx.fill();document.getElementById('price').textContent=points[points.length-1].toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function refresh(){document.getElementById('balance').textContent=money(balance);let el=document.getElementById('pnl');el.textContent=(pnl<0?'−':'')+money(Math.abs(pnl));el.className='value '+(pnl>=0?'green':'red');document.getElementById('openCount').textContent=(open?1:0)+' / 1';document.getElementById('riseBtn').disabled=!!open;document.getElementById('fallBtn').disabled=!!open;document.getElementById('positions').innerHTML=open?`<div class="position"><div><strong>${open.side} · ${open.market}</strong><small>Stake ${money(open.stake)} · ${open.duration} min</small></div><span class="tag wait" id="timer">Settling…</span></div>`:'<div class="empty">No open demo positions.</div>'}
+function trade(side){if(open)return;let stake=Number(document.getElementById('stake').value),risk=document.getElementById('risk').checked;if(!Number.isFinite(stake)||stake<=0){msg('Enter a valid stake.');return}if(risk&&stake>2){msg('Risk guard: maximum stake is $2.');return}if(stake>balance){msg('Not enough virtual balance.');return}if(stake<.35){msg('Minimum demo stake is $0.35.');return}balance-=stake;open={side,stake,duration:Number(document.getElementById('duration').value),market};refresh();msg('Demo position opened. Waiting for simulated settlement…');setTimeout(()=>{if(!open)return;let win=Math.random()>.49;let result=win?stake*.8:-stake;balance+=win?stake+result:0;pnl+=result;let oldSide=open.side;open=null;refresh();msg(`${oldSide}: simulated ${win?'win':'loss'} (${win?'+':'−'}${money(Math.abs(result))}). Random UI result only.`)},Math.max(8,open.duration*7000))}
+function msg(t){document.getElementById('message').textContent=t}
+document.getElementById('riseBtn').addEventListener('click',()=>trade('RISE / EVEN'));document.getElementById('fallBtn').addEventListener('click',()=>trade('FALL / ODD'));
+document.getElementById('stake').addEventListener('change',e=>{if(document.getElementById('risk').checked&&Number(e.target.value)>2){e.target.value=2;msg('Risk guard capped the stake at $2.')}})
+document.getElementById('risk').addEventListener('change',e=>msg(e.target.checked?'Low-risk stake guard is ON.':'Warning: stake guard is OFF.'));
+document.getElementById('bot').addEventListener('change',e=>{if(e.target.checked){e.target.checked=false;msg('Auto-trading is disabled in this prototype. Use the manual demo buttons only.')}else msg('Demo bot is OFF.')});
+document.getElementById('markets').addEventListener('click',e=>{let b=e.target.closest('button[data-market]');if(!b)return;document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active',x===b));market=b.dataset.market;selectedSymbol=b.dataset.symbol||'';document.getElementById('marketTitle').textContent=market;if(!liveSocket||liveSocket.readyState!==WebSocket.OPEN){let base=market.includes('100')?10245.8:market.includes('50')?8230.4:market.includes('25')?5210.7:456.2;points=Array.from({length:46},(_,i)=>base+(Math.random()-.5)*i*1.3);draw();msg('Switched illustrative chart. Prices are not live.')}else subscribeLiveSymbol();document.getElementById('scanHeadline').textContent='Ready to analyze';document.getElementById('scanExplanation').textContent='Run a scan to calculate recent momentum, trend consistency, and price variability.';document.getElementById('scanMeter').style.width='0%';document.getElementById('scanScore').textContent='No score yet';document.getElementById('momentumValue').textContent='—';document.getElementById('trendValue').textContent='—';document.getElementById('volValue').textContent='—'});
+
+function runScan(){
+  const n=points.length, recent=points.slice(-8), prior=points.slice(-16,-8);
+  const first=recent[0],last=recent[recent.length-1];
+  const momentum=((last-first)/Math.max(Math.abs(first),1))*100;
+  let ups=0,downs=0;for(let i=1;i<recent.length;i++){if(recent[i]>=recent[i-1])ups++;else downs++}
+  const consistency=Math.round(Math.max(ups,downs)/Math.max(recent.length-1,1)*100);
+  const changes=[];for(let i=1;i<recent.length;i++)changes.push(Math.abs(recent[i]-recent[i-1]));
+  const avgChange=changes.reduce((a,b)=>a+b,0)/Math.max(changes.length,1);
+  const base=Math.abs(recent.reduce((a,b)=>a+b,0)/recent.length)||1;
+  const variability=avgChange/base*100;
+  let direction='MIXED / WAIT', rationale='Recent movement is mixed. Waiting is the cautious demo interpretation.', rawScore=50;
+  if(momentum>0.025 && ups>=4){direction='UPWARD BIAS';rationale='Recent prices rose overall and more recent steps were up than down.';rawScore=50+Math.min(20,Math.abs(momentum)*180)+Math.max(0,consistency-50)*.25}
+  else if(momentum<-.025 && downs>=4){direction='DOWNWARD BIAS';rationale='Recent prices fell overall and more recent steps were down than up.';rawScore=50+Math.min(20,Math.abs(momentum)*180)+Math.max(0,consistency-50)*.25}
+  else {rawScore=50+Math.max(0,consistency-50)*.15}
+  const score=Math.max(50,Math.min(70,Math.round(rawScore)));
+  document.getElementById('scanHeadline').textContent=direction;
+  document.getElementById('scanExplanation').textContent=rationale;
+  document.getElementById('scanMeter').style.width=score+'%';
+  document.getElementById('scanScore').textContent='Illustrative signal strength: '+score+'% · not a verified probability of winning';
+  document.getElementById('momentumValue').textContent=(momentum>=0?'+':'')+momentum.toFixed(3)+'%';
+  document.getElementById('trendValue').textContent=consistency+'%';
+  document.getElementById('volValue').textContent=variability.toFixed(3)+'%';
+  msg('Scan complete for '+market+'. No trade was placed.');
+}
+function generateSample(){
+  let base=points[points.length-1]||marketBase;
+  points=Array.from({length:46},(_,i)=>base+(Math.random()-.5)*i*(market.includes('100')?1.3:.7));
+  draw();
+  document.getElementById('scanHeadline').textContent='New sample ready';
+  document.getElementById('scanExplanation').textContent='Sample price history changed. Run the scanner again to inspect it.';
+  document.getElementById('scanMeter').style.width='0%';
+  document.getElementById('scanScore').textContent='No score yet';
+  document.getElementById('momentumValue').textContent='—';
+  document.getElementById('trendValue').textContent='—';
+  document.getElementById('volValue').textContent='—';
+  msg('Generated new illustrative prices. These are not live market data.');
+}
+document.getElementById('scanBtn').addEventListener('click',runScan);
+document.getElementById('refreshDataBtn').addEventListener('click',generateSample);
+
+let botRunning=false,botCount=0,botRunPnl=0,botTimer=null,botStartPnl=0;
+function botSay(t){document.getElementById('botMessage').textContent=t}
+function updateBotUi(){
+ document.getElementById('botTradeCount').textContent=String(botCount);
+ const p=document.getElementById('botRunPnl');p.textContent=(botRunPnl<0?'−':'')+money(Math.abs(botRunPnl));p.style.color=botRunPnl>=0?'var(--green)':'var(--red)';
+ document.getElementById('botState').textContent=botRunning?'RUNNING':'STOPPED';
+ document.getElementById('startBot').disabled=botRunning||!!open;
+}
+function stopBot(reason){botRunning=false;if(botTimer){clearTimeout(botTimer);botTimer=null}updateBotUi();if(reason)botSay(reason)}
+function botStep(){
+ if(!botRunning)return;
+ const maxTrades=Number(document.getElementById('botMaxTrades').value);
+ const lossLimit=Number(document.getElementById('botStopLoss').value);
+ const profitLimit=Number(document.getElementById('botTakeProfit').value);
+ if(botCount>=maxTrades){stopBot('Trade limit reached. Bot stopped automatically.');return}
+ if(botRunPnl<=-lossLimit){stopBot('Session loss stop reached. Bot stopped automatically.');return}
+ if(botRunPnl>=profitLimit){stopBot('Session profit stop reached. Bot stopped automatically.');return}
+ if(open){botTimer=setTimeout(botStep,1000);return}
+ const stake=Number(document.getElementById('botStake').value);
+ if(!Number.isFinite(stake)||stake<.35||stake>2){stopBot('Stake must be between $0.35 and $2.00.');return}
+ if(stake>balance){stopBot('Virtual balance is too low for this stake.');return}
+ const recent=points.slice(-8),delta=recent[recent.length-1]-recent[0];
+ let side='RISE / EVEN';
+ const strategy=document.getElementById('botStrategy').value;
+ if(strategy==='momentum')side=delta>=0?'RISE / EVEN':'FALL / ODD';
+ else if(strategy==='contrarian')side=delta>=0?'FALL / ODD':'RISE / EVEN';
+ else {if(Math.abs(delta)<Math.abs(recent[0])*.0002){botSay('Mixed rule: movement is unclear, so the bot is waiting.');botTimer=setTimeout(botStep,1800);return}side=delta>0?'RISE / EVEN':'FALL / ODD'}
+ botCount++;trade(side);
+ botSay('Demo bot opened trade '+botCount+' of '+maxTrades+'. Waiting for simulated result.');
+ const check=()=>{if(!open){const last=Number(document.getElementById('pnl').textContent.replace(/[$,−]/g,''));botRunPnl=pnl-botStartPnl;updateBotUi();
+   if(!botRunning)return;
+   if(botRunPnl<=-lossLimit){stopBot('Session loss stop reached. Bot stopped automatically.');return}
+   if(botRunPnl>=profitLimit){stopBot('Session profit stop reached. Bot stopped automatically.');return}
+   if(botCount>=maxTrades){stopBot('Trade limit reached. Bot stopped automatically.');return}
+   botTimer=setTimeout(botStep,1200);
+  }else{botTimer=setTimeout(check,300)}};
+ botTimer=setTimeout(check,300);
+}
+document.getElementById('startBot').addEventListener('click',()=>{
+ if(botRunning)return;
+ if(open){botSay('Wait until the current demo position settles before starting the bot.');return}
+ botRunning=true;botStartPnl=pnl;botCount=0;botRunPnl=0;updateBotUi();botSay('Demo run started. Bot will follow your selected entry rule.');botTimer=setTimeout(botStep,500);
+});
+document.getElementById('stopBot').addEventListener('click',()=>stopBot('Bot stopped by you. Any open demo position will still settle.'));
+document.getElementById('resetBot').addEventListener('click',()=>{stopBot('Run reset. Bot is stopped.');botCount=0;botRunPnl=0;botStartPnl=pnl;updateBotUi()});
+document.getElementById('bot').addEventListener('change',e=>{if(e.target.checked){e.target.checked=false;botSay('The general bot toggle is not used. Start or stop the bot from Demo bot lab.')}});
+const oldTrade=trade;
+trade=function(side){oldTrade(side);updateBotUi()};
+
+
+let liveSocket=null,liveSubscriptionId=null,selectedSymbol='',liveTickCount=0,availableSymbols=[],livePingTimer=null;
+function liveStatus(t){document.getElementById('liveStatus').textContent=t}
+function desiredMarketName(){return market.toLowerCase()}
+function findMarketSymbol(){
+ const name=desiredMarketName();
+ const list=availableSymbols;
+ const exact=list.find(x=>(x.display_name||'').toLowerCase()===name);
+ if(exact)return exact;
+ const partial=list.find(x=>(x.display_name||'').toLowerCase().includes(name.replace(' index','')));
+ return partial||null;
+}
+function subscribeLiveSymbol(){
+ if(!liveSocket||liveSocket.readyState!==WebSocket.OPEN)return;
+ const found=findMarketSymbol();
+ if(!found){liveStatus('Connected, but Deriv did not list "'+market+'". Try another market.');return}
+ selectedSymbol=found.symbol;
+ if(liveSubscriptionId){try{liveSocket.send(JSON.stringify({forget:liveSubscriptionId}))}catch(e){}liveSubscriptionId=null}
+ liveTickCount=0;
+ liveStatus('Connected · requesting '+(found.display_name||selectedSymbol)+'…');
+ liveSocket.send(JSON.stringify({ticks_history:selectedSymbol,count:45,end:'latest',style:'ticks',subscribe:1,req_id:11}));
+}
+document.getElementById('connectLiveBtn').addEventListener('click',()=>{
+ if(liveSocket&&(liveSocket.readyState===WebSocket.OPEN||liveSocket.readyState===WebSocket.CONNECTING)){liveStatus('A live data connection is already active or connecting.');return}
+ liveStatus('Connecting to Deriv and checking available markets…');
+ try{
+  liveSocket=new WebSocket('wss://ws.binaryws.com/websockets/v3');
+  liveSocket.onopen=()=>{
+   liveStatus('Connected to Deriv · discovering available markets…');
+   if(livePingTimer)clearInterval(livePingTimer);
+   livePingTimer=setInterval(()=>{if(liveSocket&&liveSocket.readyState===WebSocket.OPEN)try{liveSocket.send(JSON.stringify({ping:1}))}catch(e){}},30000);
+   liveSocket.send(JSON.stringify({active_symbols:'brief',product_type:'basic',req_id:1}));
+   // If symbol discovery is delayed, show a diagnostic rather than silently claiming live data.
+   setTimeout(()=>{if(liveSocket&&liveSocket.readyState===WebSocket.OPEN&&!availableSymbols.length)liveStatus('Connected, but market list has not arrived yet. Wait a moment or reconnect.')},5000);
+  };
+  liveSocket.onmessage=(event)=>{
+   let data;try{data=JSON.parse(event.data)}catch{return}
+   if(data.error){liveStatus('Deriv API error: '+data.error.message);return}
+   if(data.msg_type==='active_symbols'&&Array.isArray(data.active_symbols)){
+    availableSymbols=data.active_symbols;
+    subscribeLiveSymbol();
+    return;
+   }
+   if(data.msg_type==='history'&&data.history&&Array.isArray(data.history.prices)){
+    const history=data.history.prices.map(Number).filter(Number.isFinite);
+    if(history.length){points=history;draw();liveStatus('LIVE · '+selectedSymbol+' · history loaded; waiting for live ticks…')}
+   }
+   if(data.msg_type==='tick'&&data.tick){
+    const q=Number(data.tick.quote);
+    if(Number.isFinite(q)){points.push(q);if(points.length>60)points.shift();draw();liveTickCount++;liveStatus('LIVE · '+selectedSymbol+' · '+q.toFixed(3)+' · tick updates: '+liveTickCount)}
+    if(data.subscription&&data.subscription.id)liveSubscriptionId=data.subscription.id;
+   }
+  };
+  liveSocket.onerror=()=>liveStatus('WebSocket error. Your browser, connection, or network may be blocking live data.');
+  liveSocket.onclose=(event)=>{if(livePingTimer){clearInterval(livePingTimer);livePingTimer=null}liveStatus('Disconnected (code '+event.code+(event.reason?': '+event.reason:'')+'). If this repeats, the network or browser may be blocking Deriv WebSockets.');liveSubscriptionId=null;};
+ }catch(err){liveStatus('Could not start connection: '+err.message)}
+});
+document.getElementById('disconnectLiveBtn').addEventListener('click',()=>{
+ if(liveSocket){try{if(liveSubscriptionId&&liveSocket.readyState===WebSocket.OPEN)liveSocket.send(JSON.stringify({forget:liveSubscriptionId}));liveSocket.close()}catch(e){}}
+ liveSocket=null;liveSubscriptionId=null;if(livePingTimer){clearInterval(livePingTimer);livePingTimer=null}liveStatus('Market data disconnected · last chart values remain visible');
+});
+window.addEventListener('beforeunload',()=>{if(livePingTimer)clearInterval(livePingTimer);if(liveSocket)liveSocket.close()});
+window.addEventListener('resize',draw);draw();refresh();runScan();updateBotUi();
+</script>
+</body>
+</html>
